@@ -1,12 +1,47 @@
 #include <iostream>
 #include <vector>
 
-using std::vector;
+using namespace std;
 
 int lcs3(vector<int> &a, vector<int> &b, vector<int> &c) {
-  //write your code here
-  return std::min(std::min(a.size(), b.size()), c.size());
+  int m = a.size();
+  int n = b.size();
+  int o = c.size();
+
+  int dp[m + 1][n + 1][o + 1];
+  for (int i = 0; i <= m; i++)
+    for (int j = 0; j <= n; j++)
+      for (int k = 0; k <= o; k++)
+        dp[i][j][k] = 0;
+
+  for (int i = 1; i <= m; i++) {
+    for (int j = 1; j <= n; j++) {
+      for (int k = 1; k <= o; k++) {
+        if (a[i - 1] == b[j - 1] && b[j - 1] == c[k - 1]) {
+          dp[i][j][k] = dp[i - 1][j - 1][k - 1] + 1;
+        } else {
+          dp[i][j][k] =
+            max(dp[i - 1][j][k],
+              max(dp[i][j - 1][k],
+                max(dp[i][j][k - 1],
+                  max(dp[i - 1][j - 1][k],
+                    max(dp[i - 1][j][k - 1],
+                      max(dp[i][j - 1][k - 1],
+                      dp[i - 1][j - 1][k - 1]
+                    )
+                  )
+                )
+              )
+            )
+          );
+        }
+      }
+    }
+  }
+
+  return dp[m][n][o];
 }
+
 
 int main() {
   size_t an;
